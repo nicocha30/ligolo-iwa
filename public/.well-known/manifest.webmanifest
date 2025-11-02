@@ -1,0 +1,22 @@
+{
+  "id": "/",
+  "short_name": "Ligolo-IWA",
+  "name": "Ligolo-ng",
+  "version": "0.1.0",
+  "icons": [
+    {
+      "src": "/ligolo.png",
+      "sizes": "48x48 72x72 96x96 128x128 256x256 512x512 1024x1024",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "scope": "/",
+  "permissions_policy": {
+    "cross-origin-isolated": ["self"],
+    "direct-sockets": ["self"],
+    "direct-sockets-private": ["self"]
+  }
+}

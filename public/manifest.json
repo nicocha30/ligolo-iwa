@@ -1,0 +1,12 @@
+{
+  "name": "Ligolo-ng Chrome",
+  "description": "Tunneling with Ligolo-ng using your browser",
+  "version": "0.1",
+  "manifest_version": 3,
+  "app": {
+    "background": {
+      "scripts": ["background.js"]
+    }
+  },
+  "icons": { "16": "ligolo.png", "128": "ligolo.png" }
+}
