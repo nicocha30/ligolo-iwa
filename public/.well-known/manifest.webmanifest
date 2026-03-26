@@ -2,12 +2,12 @@
   "id": "/",
   "short_name": "Ligolo-IWA",
   "name": "Ligolo-ng",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "icons": [
     {
       "src": "/ligolo.png",
-      "sizes": "48x48 72x72 96x96 128x128 256x256 512x512 1024x1024",
-      "type": "image/svg+xml",
+      "sizes": "500x500",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],

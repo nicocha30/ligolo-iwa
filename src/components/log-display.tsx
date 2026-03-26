@@ -1,18 +1,19 @@
 import React from "react";
 import {
+  Button,
   Card,
   CardBody,
-  CardHeader,
   CardFooter,
-  Button,
+  CardHeader,
   Divider,
 } from "@heroui/react";
 import { Icon } from "@iconify/react";
 
 interface LogDisplayProps {
   logs: Array<{
-    timestamp: Date;
+    id: number;
     message: string;
+    timestamp: string;
     type: "info" | "error" | "success";
   }>;
   clearLogs: () => void;
@@ -22,20 +23,10 @@ export const LogDisplay: React.FC<LogDisplayProps> = ({ logs, clearLogs }) => {
   const logContainerRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    // Auto-scroll to bottom when new logs are added
     if (logContainerRef.current) {
       logContainerRef.current.scrollTop = logContainerRef.current.scrollHeight;
     }
   }, [logs]);
-
-  const formatTimestamp = (date: Date) => {
-    return date.toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    });
-  };
 
   const getLogIcon = (type: "info" | "error" | "success") => {
     switch (type) {
@@ -63,7 +54,7 @@ export const LogDisplay: React.FC<LogDisplayProps> = ({ logs, clearLogs }) => {
 
   return (
     <Card className="h-full">
-      <CardHeader className="flex justify-between items-center">
+      <CardHeader className="flex items-center justify-between">
         <div>
           <h2 className="text-lg font-medium">Connection Logs</h2>
           <p className="text-small text-foreground-500">
@@ -87,17 +78,17 @@ export const LogDisplay: React.FC<LogDisplayProps> = ({ logs, clearLogs }) => {
           className="h-[400px] overflow-y-auto p-4 font-mono text-small"
         >
           {logs.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-foreground-400">
-              <Icon className="text-4xl mb-2" icon="lucide:file-text" />
+            <div className="flex h-full flex-col items-center justify-center text-foreground-400">
+              <Icon className="mb-2 text-4xl" icon="lucide:file-text" />
               <p>No logs available</p>
             </div>
           ) : (
-            logs.map((log, index) => (
-              <div key={index} className="mb-2 flex items-start gap-2">
-                <span className="text-foreground-400 shrink-0">
-                  [{formatTimestamp(log.timestamp)}]
+            logs.map((log) => (
+              <div key={log.id} className="mb-2 flex items-start gap-2">
+                <span className="shrink-0 text-foreground-400">
+                  [{log.timestamp}]
                 </span>
-                <span className="shrink-0 mt-0.5">{getLogIcon(log.type)}</span>
+                <span className="mt-0.5 shrink-0">{getLogIcon(log.type)}</span>
                 <span className={getLogClass(log.type)}>{log.message}</span>
               </div>
             ))
@@ -119,19 +110,19 @@ export const LogDisplay: React.FC<LogDisplayProps> = ({ logs, clearLogs }) => {
             const logText = logs
               .map(
                 (log) =>
-                  `[${formatTimestamp(log.timestamp)}] ${log.type.toUpperCase()}: ${log.message}`,
+                  `[${log.timestamp}] ${log.type.toUpperCase()}: ${log.message}`,
               )
               .join("\n");
 
             const blob = new Blob([logText], { type: "text/plain" });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
+            const anchor = document.createElement("a");
 
-            a.href = url;
-            a.download = `ligolo-logs-${new Date().toISOString().split("T")[0]}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
+            anchor.href = url;
+            anchor.download = `ligolo-logs-${new Date().toISOString().split("T")[0]}.txt`;
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
             URL.revokeObjectURL(url);
           }}
         >

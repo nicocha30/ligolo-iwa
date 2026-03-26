@@ -205,7 +205,7 @@ export type LigoloPacket =
   | ListenerSocketConnectionReady;
 
 type MessageTypeValue = (typeof MESSAGE_TYPES)[keyof typeof MESSAGE_TYPES];
-type Constructor<T> = new (...args: any[]) => T;
+type Constructor<T> = new (...args: unknown[]) => T;
 
 const PAYLOAD_CLASS_MAP = new Map<Constructor<LigoloPacket>, MessageTypeValue>([
   [InfoRequestPacket, MESSAGE_TYPES.MessageInfoRequest],
@@ -243,7 +243,6 @@ const MESSAGE_TYPE_TO_CLASS_MAP = new Map<
 /** Encodes Ligolo-ng protocol messages to a stream. */
 export class LigoloEncoder {
   private readonly _stream: Handshake;
-  // MODIFIED: Use a Packr instance for encoding.
   private readonly _packer = new Packr({
     mapsAsObjects: true,
     useRecords: false,
@@ -307,9 +306,6 @@ export class LigoloDecoder {
     const unpackr = new Unpackr({ mapsAsObjects: true });
 
     for await (const chunk of rawStream) {
-      // unpackr.unpackMultiple returns an array of fully decoded objects from the chunk.
-      // It handles messages that span across multiple chunks internally.
-      // We use chunk.subarray() to get a Uint8Array, which unpackr expects.
       const messages = unpackr.unpackMultiple(chunk.subarray());
 
       for (const message of messages) {
@@ -320,7 +316,6 @@ export class LigoloDecoder {
 
   /** Reads and decodes the next Ligolo-ng message from the stream. */
   public async decode(): Promise<void> {
-    // 1. Decode the message type ID
     const typeResult = await this._decodedStream.next();
 
     if (typeResult.done) {
@@ -333,7 +328,6 @@ export class LigoloDecoder {
     this.payloadType = payloadType;
     this.messageType = PAYLOAD_TYPE_NAMES[payloadType];
 
-    // 2. Look up the corresponding class constructor
     const PacketClass = MESSAGE_TYPE_TO_CLASS_MAP.get(payloadType);
 
     if (!PacketClass) {
@@ -361,7 +355,7 @@ export class LigoloDecoder {
 
     switch (PacketClass) {
       case InfoReplyPacket:
-        const interfaces = rawPayload.Interfaces.map(
+        const interfaces = (rawPayload.Interfaces ?? []).map(
           (iface: any) =>
             new NetInterface(
               iface.Index,
@@ -416,7 +410,6 @@ export class LigoloDecoder {
         break;
 
       default:
-        console.log(rawPayload);
         throw new Error(
           `No constructor logic found for packet type: ${this.messageType}`,
         );

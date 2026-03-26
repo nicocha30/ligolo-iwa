@@ -23,7 +23,10 @@ export const ConnectionForm: React.FC<ConnectionFormProps> = ({
   isConnecting,
   isConnected,
 }) => {
-  const handleChange = (field: string, value: string) => {
+  const handleChange = (
+    field: keyof ConnectionFormProps["connectionDetails"],
+    value: string,
+  ) => {
     setConnectionDetails((prev) => ({
       ...prev,
       [field]: value,
