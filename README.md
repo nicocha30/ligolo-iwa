@@ -1,9 +1,17 @@
 # Ligolo-IWA
 
+A Ligolo-ng JavaScript agent working inside Chrome/Edge by leveraging Isolated Web Applications.
+
+![Ligolo-IWA](docs/demo.png)
+
+See the Ligolo-IWA doc for quick setup: [Ligolo-IWA (Setup/Quickstart)](https://iwa.ligolo.ng/)
+
+And don't forget to read the Ligolo-ng documentation: [📑 Ligolo-ng Documentation (Setup/Quickstart)](https://docs.ligolo.ng/)
+
 [![GPLv3](https://img.shields.io/badge/License-GPLv3-brightgreen.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-[📑 Ligolo-IWA (Setup/Quickstart)](https://iwa.ligolo.ng/)
-[📑 Ligolo-ng Documentation (Setup/Quickstart)](https://docs.ligolo.ng/)
+
+## Local setup
 
 Build the signed Isolated Web App bundle locally with:
 

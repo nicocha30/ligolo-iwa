@@ -1,0 +1,55 @@
+name: Release IWA Bundle
+
+on:
+  push:
+    tags:
+      - "*"
+
+jobs:
+  release-iwa:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Materialize signing key
+        env:
+          IWA_SIGNING_KEY: ${{ secrets.IWA_SIGNING_KEY }}
+        run: |
+          if [ -z "$IWA_SIGNING_KEY" ]; then
+            echo "::error::Missing required secret IWA_SIGNING_KEY"
+            exit 1
+          fi
+
+          mkdir -p keys
+          printf '%s' "$IWA_SIGNING_KEY" > keys/ed25519.key
+          chmod 600 keys/ed25519.key
+
+      - name: Build signed IWA bundle
+        env:
+          CI: "true"
+          WEB_BUNDLE_SIGNING_PASSPHRASE: ${{ secrets.WEB_BUNDLE_SIGNING_PASSPHRASE }}
+        run: make
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" out/ligolo-iwa.swbn --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" out/ligolo-iwa.swbn \
+              --title "$GITHUB_REF_NAME" \
+              --generate-notes
+          fi
