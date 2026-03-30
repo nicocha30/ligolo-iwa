@@ -1,6 +1,6 @@
 # Ligolo-IWA
 
-A Ligolo-ng JavaScript agent working inside Chrome/Edge by leveraging Isolated Web Applications.
+A Ligolo-ng JavaScript agent working inside Chrome/Chromium-based browsers by leveraging Isolated Web Applications.
 
 ![Ligolo-IWA](docs/demo.png)
 
@@ -33,11 +33,4 @@ Chrome's current IWA testing flow uses Web App Internals:
 
 ## Install on Edge
 
-Microsoft Edge is Chromium-based, and the developer installation flow is generally the same for testing:
-
-1. Enable `edge://flags/#enable-isolated-web-app-dev-mode`.
-2. Open `edge://web-app-internals`.
-3. Choose `Install IWA from Signed Web Bundle`.
-4. Select `out/ligolo-iwa.swbn`.
-
-Note: the Edge-specific internal URLs above are inferred from Chromium parity. If your Edge build does not expose them, use Chrome for installation and testing.
+Due to current limitations in how Microsoft Edge handles the new Isolated Web App standard, installation is currently unsupported on this browser.
